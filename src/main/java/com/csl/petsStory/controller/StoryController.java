@@ -1,5 +1,8 @@
 package com.csl.petsStory.controller;
 
+import com.csl.petsStory.entity.pet.PetEntity;
+import com.csl.petsStory.entity.story.StoryEntity;
+import com.csl.petsStory.service.StoryService;
 import com.csl.petsStory.service.impl.StoryRunable;
 import com.csl.petsStory.utils.ResponseTemplate;
 import com.csl.petsStory.utils.ResponseUtil;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.EmptyStackException;
 
 /**
  * @author: Shilin Chai
@@ -20,11 +24,14 @@ import javax.servlet.http.HttpServletRequest;
 public class StoryController {
     @Autowired
     private StoryWS storyWS;
+    @Autowired
+    private StoryService storyService;
 
-    @RequestMapping(value = "/hello")
-    public ResponseTemplate hello(@RequestBody Object object, HttpServletRequest request) {
+    @RequestMapping(value = "/getStory")
+    public ResponseTemplate getPet(@RequestBody PetEntity entity, HttpServletRequest request) {
         try {
-            return ResponseUtil.success("hello");
+
+            return ResponseUtil.success("getStory ok");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseUtil.fail("hello error" + e.getMessage());
@@ -38,6 +45,18 @@ public class StoryController {
             //异步启动线程
             templateTest.start();
             return ResponseUtil.success("ok","ok~");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseUtil.fail("hello error" + e.getMessage());
+        }
+    }
+
+
+    @RequestMapping(value = "/addStory")
+    public ResponseTemplate addStory(@RequestBody StoryEntity entity, HttpServletRequest request) {
+        try {
+            String id = storyService.addStory(entity);
+            return ResponseUtil.success("addStory ok " +id );
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseUtil.fail("hello error" + e.getMessage());
