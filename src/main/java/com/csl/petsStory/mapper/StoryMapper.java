@@ -2,6 +2,7 @@ package com.csl.petsStory.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.csl.petsStory.entity.story.StoryEntity;
+import org.springframework.stereotype.Component;
 
 /**
  * @author: Shilin Chai

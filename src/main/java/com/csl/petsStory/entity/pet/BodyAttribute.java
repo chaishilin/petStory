@@ -1,11 +1,7 @@
 package com.csl.petsStory.entity.pet;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.springframework.messaging.rsocket.annotation.ConnectMapping;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * @author: Shilin Chai
@@ -15,10 +11,8 @@ import java.util.List;
 @Data
 @Component
 public class BodyAttribute extends BaseAttribute {
-    //体重
+    //体重 g
     private int weight;
-    //体长
-    private int size;
     //毛色
     //private List<String> colors;
     //饥饿度
@@ -27,4 +21,11 @@ public class BodyAttribute extends BaseAttribute {
     private int friendly;
     //清洁度
     private int clean;
+
+    public BodyAttribute(){
+        weight = 1;
+        hanger = 10;
+        friendly = 5;
+        clean = 10;
+    }
 }

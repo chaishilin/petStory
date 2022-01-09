@@ -1,5 +1,6 @@
 package com.csl.petsStory.entity.pet;
 
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * @Description: 宠物属性
  */
 @Component
+@Data
 public class PetEntity {
     @Autowired
     private PetAttribute petAttribute;

@@ -1,6 +1,5 @@
 package com.csl.petsStory.controller;
 
-import com.csl.petsStory.entity.pet.PetEntity;
 import com.csl.petsStory.entity.story.StoryEntity;
 import com.csl.petsStory.service.StoryService;
 import com.csl.petsStory.service.impl.StoryRunable;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.EmptyStackException;
 
 /**
  * @author: Shilin Chai
@@ -28,10 +26,10 @@ public class StoryController {
     private StoryService storyService;
 
     @RequestMapping(value = "/getStory")
-    public ResponseTemplate getPet(@RequestBody PetEntity entity, HttpServletRequest request) {
+    public ResponseTemplate getStory(@RequestBody StoryEntity entity, HttpServletRequest request) {
         try {
 
-            return ResponseUtil.success("getStory ok");
+            return ResponseUtil.success(storyService.getStory(entity));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseUtil.fail("hello error" + e.getMessage());
@@ -52,10 +50,10 @@ public class StoryController {
     }
 
 
-    @RequestMapping(value = "/addStory")
-    public ResponseTemplate addStory(@RequestBody StoryEntity entity, HttpServletRequest request) {
+    @RequestMapping(value = "/updateStory")
+    public ResponseTemplate updateStory(@RequestBody StoryEntity entity, HttpServletRequest request) {
         try {
-            String id = storyService.addStory(entity);
+            String id = storyService.updateStory(entity);
             return ResponseUtil.success("addStory ok " +id );
         } catch (Exception e) {
             e.printStackTrace();

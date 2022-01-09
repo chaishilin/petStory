@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-public class HealthAttribute extends BaseAttribute{
+public class HealthAttribute extends BaseAttribute {
     //整体健康度
     private int totalHealth;
     //头部健康度
@@ -21,5 +21,14 @@ public class HealthAttribute extends BaseAttribute{
     private int footHealth;
     //尾巴健康度
     private int tailHealth;
+
+    public HealthAttribute() {
+        int defaultValue = 10;
+        totalHealth = defaultValue;
+        headHealth = defaultValue;
+        bodyHealth = defaultValue;
+        footHealth = defaultValue;
+        tailHealth = defaultValue;
+    }
 
 }

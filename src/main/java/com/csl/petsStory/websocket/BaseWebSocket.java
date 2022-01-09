@@ -2,6 +2,7 @@ package com.csl.petsStory.websocket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.OnClose;
@@ -32,13 +33,13 @@ public abstract class BaseWebSocket {
         return new ConcurrentHashMap<>(idMap);//返回一份拷贝
     }
 
-    public static void addSession(String key,Session session) {
-        if(key != null && !"".equals(key)){
-            sessionMap.put(key,session);
-            idMap.put(session.getId(),key);
-        }else{
-            sessionMap.put(session.getId(),session);
-            idMap.put(session.getId(),session.getId());
+    public static void addSession(String key, Session session) {
+        if (key != null && !"".equals(key)) {
+            sessionMap.put(key, session);
+            idMap.put(session.getId(), key);
+        } else {
+            sessionMap.put(session.getId(), session);
+            idMap.put(session.getId(), session.getId());
         }
     }
 
@@ -47,17 +48,33 @@ public abstract class BaseWebSocket {
         idMap.remove(session.getId());
     }
 
+
+
+    //上下文
+    private static ApplicationContext applicationContext;
+
+    public static void setApplicationContext(ApplicationContext applicationContext) {
+        BaseWebSocket.applicationContext = applicationContext;
+    }
+    public static ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
+
+
     @OnError
-    public void onError(Session session, Throwable error){
+    public void onError(Session session, Throwable error) {
         removeSession(session);
         logger.info("websocket remove " + session.getId());
         error.printStackTrace();
     }
 
     @OnMessage
-    public void showMessage(Session session, String msg) {
+    public void onMessage(Session session, String msg) {
         logger.info("websocket get msg:{" + msg + "} from " + session.getId());
+        processMsg(session, msg);
     }
+
+    abstract Object processMsg(Session session, String msg);
 
     @OnClose
     public void onClose(Session session) {
@@ -65,8 +82,8 @@ public abstract class BaseWebSocket {
         logger.info("websocket remove " + session.getId());
     }
 
-    public void sendMsg(String key, String msg){
-        sendMsg(getConcurrentHashMap().get(key),msg);
+    public void sendMsg(String key, String msg) {
+        sendMsg(getConcurrentHashMap().get(key), msg);
     }
 
     public void sendMsg(Session session, String msg) {

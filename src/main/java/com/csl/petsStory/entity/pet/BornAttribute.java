@@ -1,7 +1,6 @@
 package com.csl.petsStory.entity.pet;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.stereotype.Component;
 
 /**

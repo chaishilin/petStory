@@ -33,10 +33,9 @@ class PetsStoryApplicationTests {
 		petAttribute.getBorn().setIntelligence(5);
 		StoryEntity storyEntity = mapper.selectById("2022010800001");
 
-		PetAttribute storyAttr =  JSONObject.parseObject(storyEntity.getAttribute(),PetAttribute.class);
 		System.out.println(JSONObject.toJSONString(entity));
-		petAttribute.cal(storyAttr);
 		System.out.println(JSONObject.toJSONString(entity));
+		//{"age":0,"maxAge":180,"petAttribute":{"body":{"clean":2,"friendly":0,"hanger":0,"size":0,"weight":0},"born":{"charm":0,"intelligence":5,"lucky":0,"strength":0},"health":{"bodyHealth":0,"footHealth":0,"headHealth":0,"tailHealth":0,"totalHealth":0},"mod":{"angry":5,"defaultValue":5,"happy":5,"sad":5,"terrified":5}}}
 
 	}
 

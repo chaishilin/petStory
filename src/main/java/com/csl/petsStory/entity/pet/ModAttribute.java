@@ -13,14 +13,12 @@ import org.springframework.stereotype.Component;
 public class ModAttribute extends BaseAttribute {
     private int happy;
     private int angry;
-    private int sad;
     private int terrified;
 
-    private final int defaultValue = 5;
     public ModAttribute(){
+        int defaultValue = 5;
         happy = defaultValue;
         angry = defaultValue;
-        sad = defaultValue;
         terrified = defaultValue;
     }
 }
