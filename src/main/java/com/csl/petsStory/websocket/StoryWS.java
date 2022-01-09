@@ -8,7 +8,6 @@ import com.csl.petsStory.entity.pet.ModAttribute;
 import com.csl.petsStory.entity.pet.PetAttribute;
 import com.csl.petsStory.entity.pet.PetEntity;
 import com.csl.petsStory.entity.story.StoryEntity;
-import com.csl.petsStory.mapper.StoryMapper;
 import com.csl.petsStory.utils.IterableProcess.impl.StoryTellerProcess;
 import com.csl.petsStory.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +71,7 @@ public class StoryWS extends BaseWebSocket {
     }
 
     private PetEntity calAttr(PetEntity petEntity, StoryEntity storyEntity) {
-        petEntity.getPetAttribute().cal(storyEntity.getAttribute());
+        petEntity.getPetAttribute().cal(storyEntity.getAttributeFromStr());
         return petEntity;
     }
 
@@ -81,5 +80,6 @@ public class StoryWS extends BaseWebSocket {
         PetEntity newPet = getApplicationContext().getBean(PetEntity.class);
         jedis.set(id,JSONObject.toJSONString(newPet));
     }
+
 }
 

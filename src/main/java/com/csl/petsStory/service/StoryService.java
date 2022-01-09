@@ -1,5 +1,6 @@
 package com.csl.petsStory.service;
 
+import com.csl.petsStory.entity.pet.PetEntity;
 import com.csl.petsStory.entity.story.StoryEntity;
 
 import java.util.List;
@@ -12,4 +13,8 @@ import java.util.List;
 public interface StoryService {
     String updateStory(StoryEntity entity);
     List<StoryEntity> getStory(StoryEntity entity);
+    List<StoryEntity> getStoryItemFromRedis();
+    StoryEntity randomSelectStoryItem(PetEntity entity);
+
+
 }

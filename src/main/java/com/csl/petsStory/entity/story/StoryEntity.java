@@ -6,7 +6,12 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.csl.petsStory.entity.pet.PetAttribute;
+import com.csl.petsStory.entity.pet.PetEntity;
 import lombok.Data;
+
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author: Shilin Chai
@@ -33,18 +38,15 @@ public class StoryEntity {
     private PetAttribute attribute;
 
     //属性变化值
-    @TableField("ATTRIBUTE")
+    @TableField("ATTRIBUTE_STR")
     private String attributeStr;
 
     @TableField("STATE")
     private String state;
 
-    public String getAttributeStr(){
-        return JSONObject.toJSONString(attribute);
-    }
-
-    public PetAttribute getAttribute(){
-        return JSONObject.parseObject(attributeStr,PetAttribute.class);
+    public PetAttribute getAttributeFromStr(){
+        attribute =  JSONObject.parseObject(attributeStr,PetAttribute.class);
+        return attribute;
     }
 
     //触发属性下限
@@ -52,15 +54,12 @@ public class StoryEntity {
     private PetAttribute attributeLow;
 
     //触发属性下限
-    @TableField("ATTRIBUTE_LOW")
+    @TableField("ATTRIBUTE_LOW_STR")
     private String attributeLowStr;
 
-    public String getAttributeLowStr(){
-        return JSONObject.toJSONString(attributeLow);
-    }
-
-    public PetAttribute getAttributeLow(){
-        return JSONObject.parseObject(attributeLowStr,PetAttribute.class);
+    public PetAttribute getAttributeLowFromStr(){
+        attributeLow =  JSONObject.parseObject(attributeLowStr,PetAttribute.class);
+        return attributeLow;
     }
 
     //触发属性上限
@@ -68,14 +67,39 @@ public class StoryEntity {
     private PetAttribute attributeHigh;
 
     //触发属性上限
-    @TableField("ATTRIBUTE_HIGH")
+    @TableField("ATTRIBUTE_HIGH_STR")
     private String attributeHighStr;
 
-    public String getAttributeHighStr(){
-        return JSONObject.toJSONString(attributeHigh);
+    public PetAttribute getAttributeHighFromStr(){
+        attributeHigh = JSONObject.parseObject(attributeHighStr,PetAttribute.class);
+        return attributeHigh;
     }
 
-    public PetAttribute getAttributeHigh(){
-        return JSONObject.parseObject(attributeHighStr,PetAttribute.class);
+    //判断宠物是否适合本故事
+    public boolean StoryItemSelectAble(PetEntity petEntity){
+        Map<String, List<String>> petAttrubites = PetAttribute.getAttributeFields();
+        for(String key : petAttrubites.keySet()){
+            for(String attr : petAttrubites.get(key)){
+                try {
+                    Field attrFromPet = PetAttribute.class.getDeclaredField(key);
+                    Field attrField = attrFromPet.getType().getDeclaredField(attr);
+                    attrFromPet.setAccessible(true);
+                    attrField.setAccessible(true);
+                    Object attrLow = attrFromPet.get(getAttributeLowFromStr());
+                    Object attrHigh = attrFromPet.get(getAttributeHighFromStr());
+                    Object attrPet = attrFromPet.get(petEntity.getPetAttribute());
+                    int valueLow = (int)attrField.get(attrLow);
+                    int valueHigh = (int)attrField.get(attrHigh);
+                    int valuePet = (int)attrField.get(attrPet);
+                    if(valuePet < valueLow || valuePet > valueHigh ){
+                        return false;
+                    }
+                    //System.out.println(attr + ":" + valueLow + "~" + valueHigh + "!!" + valuePet);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return true;
     }
 }

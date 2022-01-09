@@ -1,6 +1,5 @@
 package com.csl.petsStory;
 
-import com.csl.petsStory.websocket.BaseWebSocket;
 import com.csl.petsStory.websocket.StoryWS;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
