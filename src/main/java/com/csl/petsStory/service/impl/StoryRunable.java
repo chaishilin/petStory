@@ -1,9 +1,7 @@
 package com.csl.petsStory.service.impl;
 
-import com.csl.petsStory.entity.pet.PetEntity;
 import com.csl.petsStory.websocket.StoryWS;
 import lombok.SneakyThrows;
-import org.springframework.stereotype.Component;
 
 /**
  * @author: Shilin Chai

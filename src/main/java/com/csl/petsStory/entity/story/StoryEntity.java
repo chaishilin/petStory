@@ -44,6 +44,14 @@ public class StoryEntity {
     @TableField("STATE")
     private String state;
 
+    public PetAttribute getAttribute(){
+        return getAttributeFromStr();
+    }
+
+    public String getAttributeStr(){
+        return JSONObject.toJSONString(attribute);
+    }
+
     public PetAttribute getAttributeFromStr(){
         attribute =  JSONObject.parseObject(attributeStr,PetAttribute.class);
         return attribute;
@@ -56,6 +64,14 @@ public class StoryEntity {
     //触发属性下限
     @TableField("ATTRIBUTE_LOW_STR")
     private String attributeLowStr;
+
+    public PetAttribute getAttributeLow(){
+        return getAttributeLowFromStr();
+    }
+
+    public String getAttributeLowStr(){
+        return JSONObject.toJSONString(attributeLow);
+    }
 
     public PetAttribute getAttributeLowFromStr(){
         attributeLow =  JSONObject.parseObject(attributeLowStr,PetAttribute.class);
@@ -70,6 +86,12 @@ public class StoryEntity {
     @TableField("ATTRIBUTE_HIGH_STR")
     private String attributeHighStr;
 
+    public PetAttribute getAttributeHigh(){
+        return getAttributeHighFromStr();
+    }
+    public String getAttributeHighStr(){
+        return JSONObject.toJSONString(attributeHigh);
+    }
     public PetAttribute getAttributeHighFromStr(){
         attributeHigh = JSONObject.parseObject(attributeHighStr,PetAttribute.class);
         return attributeHigh;

@@ -1,13 +1,9 @@
 package com.csl.petsStory.websocket;
 
 import com.alibaba.fastjson.JSONObject;
-import com.csl.petsStory.entity.pet.BodyAttribute;
-import com.csl.petsStory.entity.pet.BornAttribute;
-import com.csl.petsStory.entity.pet.HealthAttribute;
-import com.csl.petsStory.entity.pet.ModAttribute;
-import com.csl.petsStory.entity.pet.PetAttribute;
 import com.csl.petsStory.entity.pet.PetEntity;
 import com.csl.petsStory.entity.story.StoryEntity;
+import com.csl.petsStory.service.StoryService;
 import com.csl.petsStory.utils.IterableProcess.impl.StoryTellerProcess;
 import com.csl.petsStory.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,19 +50,20 @@ public class StoryWS extends BaseWebSocket {
 
     @Override
     Object processMsg(Session session, String msg) {
-        PetEntity petEntity = new PetEntity();
-        PetAttribute petAttribute = new PetAttribute();
-        petAttribute.setBody(new BodyAttribute());//pet存在redis
-        petAttribute.setBorn(new BornAttribute());
-        petAttribute.setHealth(new HealthAttribute());
-        petAttribute.setMod(new ModAttribute());
-        petAttribute.getBody().setClean(Integer.parseInt(msg));
-        petAttribute.getBorn().setIntelligence(9);
-        petEntity.setPetAttribute(petAttribute);
-        StoryEntity sEntity = new StoryEntity();
-        //sEntity.setAttribute("{\"body\":{\"clean\":1,\"friendly\":2,\"hanger\":4,\"size\":6,\"weight\":1},\"born\":{\"charm\":1,\"intelligence\":2,\"lucky\":0,\"strength\":0},\"health\":{\"bodyHealth\":0,\"footHealth\":1,\"headHealth\":0,\"tailHealth\":0,\"totalHealth\":0},\"mod\":{\"angry\":5,\"defaultValue\":5,\"happy\":5,\"sad\":5,\"terrified\":5}}");
-        PetEntity entity = calAttr(petEntity,sEntity);
-        sendMsg("1234", JSONObject.toJSONString(entity));
+        JedisCommands jedis = RedisUtil.getInstance();
+        String petStr = jedis.get("1234");
+        PetEntity petEntity = JSONObject.parseObject(petStr,PetEntity.class);
+        StoryService storyService = getApplicationContext().getBean(StoryService.class);
+        StoryEntity storyEntity = storyService.randomSelectStoryItem(petEntity);
+        petEntity.getPetAttribute().cal(storyEntity.getAttributeFromStr());
+        petEntity.petGrow();
+        jedis.set("1234",JSONObject.toJSONString(petEntity));
+        if(petEntity.getAge() >= petEntity.getMaxAge()){
+            sendMsg("1234","你"+petEntity.getAgeStr() + "啦！趴在小窝窝里面睡着去天堂啦");
+            removeSession(session);
+        }else{
+            sendMsg("1234","你"+petEntity.getAgeStr() + "啦！"+ storyEntity.getContent());
+        }
         return null;
     }
 
@@ -80,6 +77,8 @@ public class StoryWS extends BaseWebSocket {
         PetEntity newPet = getApplicationContext().getBean(PetEntity.class);
         jedis.set(id,JSONObject.toJSONString(newPet));
     }
+
+
 
 }
 

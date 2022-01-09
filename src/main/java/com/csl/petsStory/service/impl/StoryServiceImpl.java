@@ -30,9 +30,9 @@ public class StoryServiceImpl implements StoryService {
     @Override
     public String updateStory(StoryEntity entity) {
         String id;
-        //entity.setAttributeStr(entity.getAttributeStr());
+        entity.setAttributeStr(entity.getAttributeStr());
         if (entity.getStoryId() == null || "".equals(entity.getStoryId())) {
-            id = numberGenerator.generateId("story");
+            id = numberGenerator.generateId("storyId");
             entity.setStoryId(id);
             mapper.insert(entity);
         } else {
@@ -56,17 +56,17 @@ public class StoryServiceImpl implements StoryService {
     @Override
     public List<StoryEntity> getStoryItemFromRedis() {
         JedisCommands jedis = RedisUtil.getInstance();
-        long storyLen = jedis.llen("story");
+        long storyLen = jedis.llen("storyList");
         if (storyLen == 0) {
             //把story加入redis
             getStory(new StoryEntity()).stream()
                     .map(item -> {
-                        return jedis.lpush("story", JSONObject.toJSONString(item));
+                        return jedis.lpush("storyList", JSONObject.toJSONString(item));
                     })
                     .collect(Collectors.toList());
-            storyLen = jedis.llen("story");
+            storyLen = jedis.llen("storyList");
         }
-        List<String> storyStrs = jedis.lrange("story", 0, storyLen);
+        List<String> storyStrs = jedis.lrange("storyList", 0, storyLen);
         return storyStrs.stream().map(item -> JSONObject.parseObject(item, StoryEntity.class)).collect(Collectors.toList());
     }
 
@@ -77,7 +77,8 @@ public class StoryServiceImpl implements StoryService {
                 .filter(item-> item.StoryItemSelectAble(entity))
                 .collect(Collectors.toList());
 
-        return chooesAbleItems.size() == 0? null:chooesAbleItems.get(0);
+        int index =(int)(Math.random()*(chooesAbleItems.size()));
+        return chooesAbleItems.size() == 0? null:chooesAbleItems.get(index);
     }
 
 }

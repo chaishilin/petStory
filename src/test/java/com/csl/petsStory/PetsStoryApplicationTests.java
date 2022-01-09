@@ -23,6 +23,11 @@ class PetsStoryApplicationTests {
 		entity.getPetAttribute().getMod().setAngry(9);
 		resulot = storyService.randomSelectStoryItem(entity);
 		System.out.println(resulot);
+		entity.getPetAttribute().getMod().setHappy(5);
+		entity.getPetAttribute().getMod().setAngry(4);
+
+		resulot = storyService.randomSelectStoryItem(entity);
+		System.out.println(resulot);
 	}
 
 }

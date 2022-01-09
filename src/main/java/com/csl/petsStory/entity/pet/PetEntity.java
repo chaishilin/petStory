@@ -27,8 +27,16 @@ public class PetEntity {
         return petAttribute;
     }
 
-    public int getAge() {
-        return age;
+    public String getAgeStr() {
+        if(age% 12 == 0){
+            return ""+age/12+"岁";
+        }else if (age < 12){
+            return ""+age+"个月";
+        }else if(age < 36){
+            return ""+age+"个月";
+        }else{
+            return ""+age/12+"岁";
+        }
     }
 
     public void addAge(int age) {
@@ -51,4 +59,14 @@ public class PetEntity {
         this.history.add(item);
     }
 
+
+    public void petGrow(){
+        if (age < 12){
+            addAge(1);
+        }else if(age < 24){
+            addAge(3);
+        }else{
+            addAge(12);
+        }
+    }
 }

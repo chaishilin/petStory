@@ -3,6 +3,7 @@ package com.csl.petsStory.controller;
 import com.csl.petsStory.entity.story.StoryEntity;
 import com.csl.petsStory.service.StoryService;
 import com.csl.petsStory.service.impl.StoryRunable;
+import com.csl.petsStory.utils.RedisUtil;
 import com.csl.petsStory.utils.ResponseTemplate;
 import com.csl.petsStory.utils.ResponseUtil;
 import com.csl.petsStory.websocket.StoryWS;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import redis.clients.jedis.commands.JedisCommands;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -54,6 +56,8 @@ public class StoryController {
     public ResponseTemplate updateStory(@RequestBody StoryEntity entity, HttpServletRequest request) {
         try {
             String id = storyService.updateStory(entity);
+            JedisCommands jedis = RedisUtil.getInstance();
+            jedis.del("storyList");
             return ResponseUtil.success("addStory ok " +id );
         } catch (Exception e) {
             e.printStackTrace();
