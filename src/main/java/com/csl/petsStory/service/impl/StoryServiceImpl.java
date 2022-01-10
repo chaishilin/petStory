@@ -51,7 +51,7 @@ public class StoryServiceImpl implements StoryService {
             queryWrapper.like("CONTENT", entity.getContent());
         }
         if (entity.getState() != null && !"".equals(entity.getState())) {
-            queryWrapper.like("STATE", entity.getState());
+            queryWrapper.eq("STATE", entity.getState());
         }
         return mapper.selectList(queryWrapper);
     }

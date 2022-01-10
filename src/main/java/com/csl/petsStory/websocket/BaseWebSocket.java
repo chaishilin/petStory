@@ -25,7 +25,7 @@ public abstract class BaseWebSocket {
     private static Map<String, Session> sessionMap = new ConcurrentHashMap<>();//key->session
     private static Map<String, String> idMap = new ConcurrentHashMap<>();//sessionId->key
 
-    public static ConcurrentHashMap<String, Session> getConcurrentHashMap() {
+    public static ConcurrentHashMap<String, Session> getSessionMap() {
         return new ConcurrentHashMap<>(sessionMap);//返回一份拷贝
     }
 
@@ -83,7 +83,7 @@ public abstract class BaseWebSocket {
     }
 
     public void sendMsg(String key, String msg) {
-        sendMsg(getConcurrentHashMap().get(key), msg);
+        sendMsg(getSessionMap().get(key), msg);
     }
 
     public void sendMsg(Session session, String msg) {

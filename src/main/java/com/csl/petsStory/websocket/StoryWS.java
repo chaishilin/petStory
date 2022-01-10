@@ -44,25 +44,25 @@ public class StoryWS extends BaseWebSocket {
     public void onOpen(Session session, @PathParam("id") String id) {
         addSession(id, session);
         super.logger.info("websocket add " + id);
-        getNewPet(id);
     }
 
 
     @Override
     Object processMsg(Session session, String msg) {
         JedisCommands jedis = RedisUtil.getInstance();
-        String petStr = jedis.get("1234");
+        String userId = getIdMap().get(session.getId());
+        String petStr = jedis.get(userId);
         PetEntity petEntity = JSONObject.parseObject(petStr,PetEntity.class);
         StoryService storyService = getApplicationContext().getBean(StoryService.class);
         StoryEntity storyEntity = storyService.randomSelectStoryItem(petEntity);
         petEntity.getPetAttribute().cal(storyEntity.getAttributeFromStr());
         petEntity.petGrow();
-        jedis.set("1234",JSONObject.toJSONString(petEntity));
+        jedis.set(userId,JSONObject.toJSONString(petEntity));
         if(petEntity.getAge() >= petEntity.getMaxAge()){
-            sendMsg("1234","你"+petEntity.getAgeStr() + "啦！趴在小窝窝里面睡着去天堂啦");
+            sendMsg(userId,"你"+petEntity.getAgeStr() + "啦！趴在小窝窝里面睡着去天堂啦");
             removeSession(session);
         }else{
-            sendMsg("1234","你"+petEntity.getAgeStr() + "啦！"+ storyEntity.getContent());
+            sendMsg(userId,"你"+petEntity.getAgeStr() + "啦！"+ storyEntity.getContent());
         }
         return null;
     }
@@ -71,14 +71,5 @@ public class StoryWS extends BaseWebSocket {
         petEntity.getPetAttribute().cal(storyEntity.getAttributeFromStr());
         return petEntity;
     }
-
-    private void getNewPet(String id){
-        JedisCommands jedis = RedisUtil.getInstance();
-        PetEntity newPet = getApplicationContext().getBean(PetEntity.class);
-        jedis.set(id,JSONObject.toJSONString(newPet));
-    }
-
-
-
 }
 

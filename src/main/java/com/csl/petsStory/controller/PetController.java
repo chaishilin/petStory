@@ -46,14 +46,15 @@ public class PetController {
     }
 
     @RequestMapping(value = "/newPet")
-    public ResponseTemplate newPet(@RequestBody PetAttribute petAttribute) {
+    public ResponseTemplate newPet(@RequestBody JSONObject jsonObject) {
         try {
+            PetAttribute petAttribute = jsonObject.getObject("attribute",PetAttribute.class);
             PetEntity petEntity = new PetEntity();
             petEntity.setPetAttribute(petAttribute);
             petEntity.setAge(0);
             petEntity.setMaxAge(120);
             JedisCommands jedis = RedisUtil.getInstance();
-            jedis.set("1234",JSONObject.toJSONString(petEntity));
+            jedis.set(jsonObject.getString("userId"),JSONObject.toJSONString(petEntity));
             return ResponseUtil.success("ok");
         } catch (Exception e) {
             e.printStackTrace();
