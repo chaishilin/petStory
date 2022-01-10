@@ -15,6 +15,7 @@ public interface StoryService {
     List<StoryEntity> getStory(StoryEntity entity);
     List<StoryEntity> getStoryItemFromRedis();
     StoryEntity randomSelectStoryItem(PetEntity entity);
+    void hardDeleteStory();
 
 
 }

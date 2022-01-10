@@ -1,7 +1,6 @@
 package com.csl.petsStory;
 
-import com.csl.petsStory.entity.pet.PetEntity;
-import com.csl.petsStory.service.StoryService;
+import com.csl.petsStory.schedule.ScheduleTask;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,25 +8,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PetsStoryApplicationTests {
 	@Autowired
-	private PetEntity entity;
-	@Autowired
-	private StoryService storyService;
+	private ScheduleTask scheduleTask;
 
 
 	@Test
 	void contextLoads()  {
-		entity.getPetAttribute().getMod().setAngry(6);
-		Object resulot = storyService.randomSelectStoryItem(entity);
-		System.out.println(resulot);
-		System.out.println("-------");
-		entity.getPetAttribute().getMod().setAngry(9);
-		resulot = storyService.randomSelectStoryItem(entity);
-		System.out.println(resulot);
-		entity.getPetAttribute().getMod().setHappy(5);
-		entity.getPetAttribute().getMod().setAngry(4);
-
-		resulot = storyService.randomSelectStoryItem(entity);
-		System.out.println(resulot);
+		scheduleTask.recordUserCount();
 	}
 
 }

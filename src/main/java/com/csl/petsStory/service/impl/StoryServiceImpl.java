@@ -50,6 +50,9 @@ public class StoryServiceImpl implements StoryService {
         if (entity.getContent() != null && !"".equals(entity.getContent())) {
             queryWrapper.like("CONTENT", entity.getContent());
         }
+        if (entity.getState() != null && !"".equals(entity.getState())) {
+            queryWrapper.like("STATE", entity.getState());
+        }
         return mapper.selectList(queryWrapper);
     }
 
@@ -58,8 +61,10 @@ public class StoryServiceImpl implements StoryService {
         JedisCommands jedis = RedisUtil.getInstance();
         long storyLen = jedis.llen("storyList");
         if (storyLen == 0) {
+            StoryEntity queryEntity = new StoryEntity();
+            queryEntity.setState("01");
             //把story加入redis
-            getStory(new StoryEntity()).stream()
+            getStory(queryEntity).stream()
                     .map(item -> {
                         return jedis.lpush("storyList", JSONObject.toJSONString(item));
                     })
@@ -79,6 +84,13 @@ public class StoryServiceImpl implements StoryService {
 
         int index =(int)(Math.random()*(chooesAbleItems.size()));
         return chooesAbleItems.size() == 0? null:chooesAbleItems.get(index);
+    }
+
+    @Override
+    public void hardDeleteStory() {
+        QueryWrapper<StoryEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("STATE","10");
+        mapper.delete(queryWrapper);
     }
 
 }
