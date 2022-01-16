@@ -32,7 +32,7 @@ public class LabelController {
     public ResponseTemplate updateLabel(@RequestBody LabelEntity entity) {
         try {
             String result = service.updateLabel(entity);
-            return ResponseUtil.success(result);
+            return ResponseUtil.success("新增或修改成功！",result);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseUtil.fail("error" + e.getMessage());

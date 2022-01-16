@@ -1,5 +1,6 @@
 package com.csl.petsStory.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.csl.petsStory.entity.label.LabelEntity;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
  * @Description:
  */
 public interface LabelService {
+    List<LabelEntity> getLabelByIds(JSONArray labels);
     List<LabelEntity> getLabel(LabelEntity entity);
     String updateLabel(LabelEntity entity);
     void hardDeleteLabel();

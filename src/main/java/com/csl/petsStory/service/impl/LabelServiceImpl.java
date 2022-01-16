@@ -1,5 +1,6 @@
 package com.csl.petsStory.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.csl.petsStory.entity.label.LabelEntity;
 import com.csl.petsStory.mapper.LabelMapper;
@@ -21,6 +22,14 @@ public class LabelServiceImpl implements LabelService {
     private NumberGenerator numberGenerator;
     @Autowired
     private LabelMapper mapper;
+
+    @Override
+    public List<LabelEntity> getLabelByIds(JSONArray labels) {
+        QueryWrapper<LabelEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("L_ID",labels);
+        return mapper.selectList(queryWrapper);
+    }
+
     @Override
     public List<LabelEntity> getLabel(LabelEntity entity) {
         QueryWrapper<LabelEntity> queryWrapper = new QueryWrapper<>();
