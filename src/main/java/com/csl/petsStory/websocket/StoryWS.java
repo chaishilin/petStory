@@ -4,9 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.csl.petsStory.entity.pet.PetEntity;
 import com.csl.petsStory.entity.story.StoryEntity;
 import com.csl.petsStory.service.StoryService;
-import com.csl.petsStory.utils.IterableProcess.impl.StoryTellerProcess;
 import com.csl.petsStory.utils.RedisUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.commands.JedisCommands;
 
@@ -25,20 +23,6 @@ import javax.websocket.server.ServerEndpoint;
 @ServerEndpoint("/story/{id}")
 @Component
 public class StoryWS extends BaseWebSocket {
-    @Autowired
-    private StoryTellerProcess process;
-
-    public void run() {
-        try {
-            process.generateWorkingList(new Object());
-            for (Object processResult : process) {
-                String msg = (String) processResult;
-                sendMsg("1234", msg);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @OnOpen
     public void onOpen(Session session, @PathParam("id") String id) {

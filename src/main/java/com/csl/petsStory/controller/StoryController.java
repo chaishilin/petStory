@@ -2,7 +2,6 @@ package com.csl.petsStory.controller;
 
 import com.csl.petsStory.entity.story.StoryEntity;
 import com.csl.petsStory.service.StoryService;
-import com.csl.petsStory.service.impl.StoryRunable;
 import com.csl.petsStory.utils.RedisUtil;
 import com.csl.petsStory.utils.ResponseTemplate;
 import com.csl.petsStory.utils.ResponseUtil;
@@ -37,20 +36,6 @@ public class StoryController {
             return ResponseUtil.fail("hello error" + e.getMessage());
         }
     }
-
-    @RequestMapping(value = "/run")
-    public ResponseTemplate run(@RequestBody Object object, HttpServletRequest request) {
-        try {
-            Thread templateTest = new Thread(new StoryRunable(storyWS));
-            //异步启动线程
-            templateTest.start();
-            return ResponseUtil.success("ok","ok~");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseUtil.fail("hello error" + e.getMessage());
-        }
-    }
-
 
     @RequestMapping(value = "/updateStory")
     public ResponseTemplate updateStory(@RequestBody StoryEntity entity, HttpServletRequest request) {
