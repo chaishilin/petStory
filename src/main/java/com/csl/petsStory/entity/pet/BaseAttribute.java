@@ -8,7 +8,9 @@ import java.lang.reflect.Field;
  * @Description:
  */
 public abstract class BaseAttribute {
-    protected final int maxNum = 10;
+
+    protected int maxNum = 10;
+
 
     public BaseAttribute cal(BaseAttribute baseAttribute) {
         Class clazz = baseAttribute.getClass();

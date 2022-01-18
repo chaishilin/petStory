@@ -9,6 +9,7 @@ import com.csl.petsStory.utils.NumberGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,9 +26,14 @@ public class LabelServiceImpl implements LabelService {
 
     @Override
     public List<LabelEntity> getLabelByIds(JSONArray labels) {
-        QueryWrapper<LabelEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.in("L_ID",labels);
-        return mapper.selectList(queryWrapper);
+        if(labels.size() > 0){
+            QueryWrapper<LabelEntity> queryWrapper = new QueryWrapper<>();
+            queryWrapper.in("L_ID",labels);
+            return mapper.selectList(queryWrapper);
+        }else{
+            return new ArrayList<>();
+        }
+
     }
 
     @Override

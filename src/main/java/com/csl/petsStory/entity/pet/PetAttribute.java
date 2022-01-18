@@ -28,6 +28,17 @@ public class PetAttribute extends BaseAttribute {
     //出生属性
     @Autowired
     private BornAttribute born;
+    //年龄属性
+    @Autowired
+    private AgeAttribute ageAttr;
+
+    public AgeAttribute getAgeAttr() {
+        return ageAttr;
+    }
+
+    public void setAgeAttr(AgeAttribute ageAttr) {
+        this.ageAttr = ageAttr;
+    }
 
     public void setBody(BodyAttribute body) {
         this.body = body;

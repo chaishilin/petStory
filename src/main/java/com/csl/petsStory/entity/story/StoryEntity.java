@@ -27,12 +27,9 @@ public class StoryEntity {
     //内容
     @TableField("CONTENT")
     private String content;
-    //最小发生年龄
-    @TableField("MIN_AGE")
-    private int minAge;
-    //最大发生年龄
-    @TableField("MAX_AGE")
-    private int maxAge;
+    //标签
+    @TableField("TAG")
+    private String tag;
     //属性变化相关
     @TableField(exist = false)
     private PetAttribute attribute;
@@ -99,6 +96,7 @@ public class StoryEntity {
 
     //判断宠物是否适合本故事
     public boolean StoryItemSelectAble(PetEntity petEntity){
+
         Map<String, List<String>> petAttrubites = PetAttribute.getAttributeFields();
         for(String key : petAttrubites.keySet()){
             for(String attr : petAttrubites.get(key)){

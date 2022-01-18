@@ -57,17 +57,15 @@ public class PetController {
     public ResponseTemplate newPet(@RequestBody JSONObject jsonObject) {
         try {
             PetAttribute petAttribute = jsonObject.getObject("attribute",PetAttribute.class);
-
+            petAttribute.getAgeAttr().setAge(0);
+            petAttribute.getAgeAttr().setMaxAge(12*15);
             JSONArray labels = jsonObject.getJSONArray("labels");
             List<LabelEntity> labelEntities = labelService.getLabelByIds(labels);
             PetEntity petEntity = new PetEntity();
             petEntity.setPetAttribute(petAttribute);
-            petEntity.setAge(0);
-            petEntity.setMaxAge(120);
             labelEntities.stream()
                     .map(item->petEntity.getPetAttribute().cal(item.getAttribute()))
                     .collect(Collectors.toList());//计算标签属性
-
 
 
             JedisCommands jedis = RedisUtil.getInstance();

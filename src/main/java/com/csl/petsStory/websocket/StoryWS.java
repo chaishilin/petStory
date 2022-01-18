@@ -58,11 +58,9 @@ public class StoryWS extends BaseWebSocket {
         petEntity.getPetAttribute().cal(storyEntity.getAttributeFromStr());
         petEntity.petGrow();
         jedis.set(userId,JSONObject.toJSONString(petEntity));
-        if(petEntity.getAge() >= petEntity.getMaxAge()){
-            sendMsg(userId,"你"+petEntity.getAgeStr() + "啦！趴在小窝窝里面睡着去天堂啦");
+        sendMsg(userId,"你"+petEntity.getAgeStr() + "啦！"+ storyEntity.getContent());
+        if(storyEntity.getTag().equals("死亡")){
             removeSession(session);
-        }else{
-            sendMsg(userId,"你"+petEntity.getAgeStr() + "啦！"+ storyEntity.getContent());
         }
         return null;
     }

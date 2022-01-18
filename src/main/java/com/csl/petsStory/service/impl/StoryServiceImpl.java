@@ -53,6 +53,9 @@ public class StoryServiceImpl implements StoryService {
         if (entity.getState() != null && !"".equals(entity.getState())) {
             queryWrapper.eq("STATE", entity.getState());
         }
+        if (entity.getTag() != null && !"".equals(entity.getTag())) {
+            queryWrapper.eq("TAG", entity.getTag());
+        }
         return mapper.selectList(queryWrapper);
     }
 
@@ -78,7 +81,9 @@ public class StoryServiceImpl implements StoryService {
     @Override
     public StoryEntity randomSelectStoryItem(PetEntity entity) {
         List<StoryEntity> storyItems = getStoryItemFromRedis();
+        String tag = entity.getPetAttribute().getAgeAttr().reachLimit() ? "死亡":"日常";
         List<StoryEntity> chooesAbleItems = storyItems.stream()
+                .filter(item -> item.getTag().equals(tag))
                 .filter(item-> item.StoryItemSelectAble(entity))
                 .collect(Collectors.toList());
 

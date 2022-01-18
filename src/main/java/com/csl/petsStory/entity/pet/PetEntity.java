@@ -16,10 +16,8 @@ import java.util.List;
 public class PetEntity {
     @Autowired
     private PetAttribute petAttribute;
-    //月龄
-    private int age;
-    //最大月龄
-    private int maxAge = 15*12;
+
+
     //大事件
     private List<String> history;
 
@@ -28,6 +26,7 @@ public class PetEntity {
     }
 
     public String getAgeStr() {
+        int age = petAttribute.getAgeAttr().getAge();
         if(age% 12 == 0){
             return ""+age/12+"岁";
         }else if (age < 12){
@@ -40,15 +39,8 @@ public class PetEntity {
     }
 
     public void addAge(int age) {
-        this.age += age;
-    }
-
-    public int getMaxAge() {
-        return maxAge;
-    }
-
-    public void setMaxAge(int maxAge) {
-        this.maxAge = maxAge;
+        int ageOld = petAttribute.getAgeAttr().getAge();
+        petAttribute.getAgeAttr().setAge(ageOld + age);
     }
 
     public List<String> getHistory() {
@@ -61,6 +53,7 @@ public class PetEntity {
 
 
     public void petGrow(){
+        int age = petAttribute.getAgeAttr().getAge();
         if (age < 12){
             addAge(1);
         }else if(age < 24){
