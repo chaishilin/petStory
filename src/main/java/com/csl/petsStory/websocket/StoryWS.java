@@ -32,21 +32,28 @@ public class StoryWS extends BaseWebSocket {
 
 
     @Override
-    Object processMsg(Session session, String msg) {
+    public void processMsg(Session session, String msg) {
         JedisCommands jedis = RedisUtil.getInstance();
         String userId = getIdMap().get(session.getId());
+        if(userId == null){
+            return;
+        }
         String petStr = jedis.get(userId);
         PetEntity petEntity = JSONObject.parseObject(petStr,PetEntity.class);
         StoryService storyService = getApplicationContext().getBean(StoryService.class);
         StoryEntity storyEntity = storyService.randomSelectStoryItem(petEntity);
-        petEntity.getPetAttribute().cal(storyEntity.getAttributeFromStr());
-        petEntity.petGrow();
-        jedis.set(userId,JSONObject.toJSONString(petEntity));
-        sendMsg(userId,"你"+petEntity.getAgeStr() + "啦！"+ storyEntity.getContent());
-        if(storyEntity.getTag().equals("死亡")){
+        if(storyEntity == null){
+            sendMsg(userId,"你意外夭折了");
             removeSession(session);
+        }else{
+            petEntity.getPetAttribute().cal(storyEntity.getAttributeFromStr());
+            petEntity.petGrow();
+            jedis.set(userId,JSONObject.toJSONString(petEntity));
+            sendMsg(userId,"你"+petEntity.getAgeStr() + "啦！"+ storyEntity.getContent());
+            if(storyEntity.getTag().equals("死亡")){
+                removeSession(session);
+            }
         }
-        return null;
     }
 
     private PetEntity calAttr(PetEntity petEntity, StoryEntity storyEntity) {

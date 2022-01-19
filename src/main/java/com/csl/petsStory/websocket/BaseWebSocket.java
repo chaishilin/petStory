@@ -43,9 +43,15 @@ public abstract class BaseWebSocket {
         }
     }
 
-    public static void removeSession(Session session) {
+    public void removeSession(Session session) {
         sessionMap.remove(idMap.get(session.getId()));
         idMap.remove(session.getId());
+        try {
+            session.close();
+        }catch (Exception e){
+            logger.error("session 关闭失败"+e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 
@@ -74,11 +80,10 @@ public abstract class BaseWebSocket {
         processMsg(session, msg);
     }
 
-    abstract Object processMsg(Session session, String msg);
+    abstract void processMsg(Session session, String msg);
 
     @OnClose
     public void onClose(Session session) {
-        removeSession(session);
         logger.info("websocket remove " + session.getId());
     }
 

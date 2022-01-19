@@ -79,22 +79,50 @@ public class StoryServiceImpl implements StoryService {
     }
 
     @Override
-    public StoryEntity randomSelectStoryItem(PetEntity entity) {
+    public StoryEntity randomSelectStoryItem(PetEntity petEntity) {
         List<StoryEntity> storyItems = getStoryItemFromRedis();
-        String tag = entity.getPetAttribute().getAgeAttr().reachLimit() ? "死亡":"日常";
+        String tag = petEntity.getPetAttribute().getAgeAttr().reachLimit() ? "死亡" : "日常";
         List<StoryEntity> chooesAbleItems = storyItems.stream()
                 .filter(item -> item.getTag().equals(tag))
-                .filter(item-> item.StoryItemSelectAble(entity))
+                .filter(item -> item.StoryItemSelectAble(petEntity))
+                .sorted((item1, item2) -> compareAttr(petEntity,item1,item2))
+                .limit(5)
                 .collect(Collectors.toList());
 
-        int index =(int)(Math.random()*(chooesAbleItems.size()));
-        return chooesAbleItems.size() == 0? null:chooesAbleItems.get(index);
+        int index = (int) (Math.random() * (chooesAbleItems.size()));
+        return chooesAbleItems.size() == 0 ? null : chooesAbleItems.get(index);
     }
+
+    private int compareAttr(PetEntity petEntity, StoryEntity item1, StoryEntity item2) {
+        double b1 = calTotalRange(item1);
+        double b2 = calTotalRange(item2);
+        if (b1 == b2) {
+            return 0;
+        } else {
+            return b1 > b2 ? 1 : -1;
+        }
+    }
+
+    /**
+     * 对于满足要求的故事，按照难满足程度排序（上下限之间的范围表明了是否难以满足）
+     * @param storyEntity
+     * @return
+     */
+    public int calTotalRange(StoryEntity storyEntity){
+        int result = 0;
+        List<Integer> lowArray = storyEntity.getAttributeLow().toArray();
+        List<Integer> highArray = storyEntity.getAttributeHigh().toArray();
+        for(int i = 0 ; i < lowArray.size();i++){
+            result += highArray.get(i)- lowArray.get(i);
+        }
+        return result;
+    }
+
 
     @Override
     public void hardDeleteStory() {
         QueryWrapper<StoryEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("STATE","10");
+        queryWrapper.eq("STATE", "10");
         mapper.delete(queryWrapper);
     }
 

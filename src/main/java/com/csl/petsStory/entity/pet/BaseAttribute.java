@@ -1,6 +1,8 @@
 package com.csl.petsStory.entity.pet;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author: Shilin Chai
@@ -10,6 +12,25 @@ import java.lang.reflect.Field;
 public abstract class BaseAttribute {
 
     protected int maxNum = 10;
+
+    public List<Integer> toArray() {
+        List<Integer> result = new ArrayList<>();
+        Field[] fields = this.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            try {
+                field.setAccessible(true);
+                if (BaseAttribute.class.isAssignableFrom(field.getType()) && !field.getType().equals(AgeAttribute.class)) {
+                    BaseAttribute subAttr = (BaseAttribute) field.get(this);
+                    result.addAll(subAttr.toArray());
+                } else if (field.getType().equals(int.class) && !field.getName().contains("age")) {
+                    result.add((int) field.get(this) + 1);
+                }
+            } catch (Exception e) {
+                System.err.println("向量转换失败：" + field.getName());
+            }
+        }
+        return result;
+    }
 
 
     public BaseAttribute cal(BaseAttribute baseAttribute) {
